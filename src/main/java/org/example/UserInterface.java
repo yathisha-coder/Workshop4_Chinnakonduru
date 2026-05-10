@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class UserInterface {
     private  Dealership dealership;
     private Scanner scanner;
-    private Vehicle vehicle;
 
     public UserInterface(){
         this.scanner = new Scanner(System.in);
