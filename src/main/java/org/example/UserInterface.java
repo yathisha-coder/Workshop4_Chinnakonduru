@@ -1,6 +1,7 @@
 package org.example;
 
 import de.vandermeer.asciitable.AsciiTable;
+import org.stringtemplate.v4.ST;
 
 import java.util.List;
 import java.util.Scanner;
@@ -48,6 +49,9 @@ public class UserInterface {
             case 9:
                 processRemoveVehicleRequest();
                 break;
+            case 10:
+                processContractRequest();
+                break;
             case 99:
                 System.out.println("\u001B[36mThank you! Come visit us again!\u001b[0m");
                 System.exit(0);
@@ -68,9 +72,10 @@ public class UserInterface {
         System.out.println("4.Find vehicles by color");
         System.out.println("5.Find vehicles by mileage range");
         System.out.println("6.Find vehicles by type (van, truck, SUV, etc.)");
-        System.out.println("7. List All Vehicles");
+        System.out.println("7.List All Vehicles");
         System.out.println("8.Add a vehicle");
         System.out.println("9.Remove a vehicle");
+        System.out.println("10.Sell (or) Lease a vehicle");
         System.out.println("99.Quit");
         System.out.println("Enter you're option: ");
     }
@@ -184,5 +189,70 @@ public class UserInterface {
                 at.addRule();
         }
         System.out.println(at.render());
+    }
+    public void processContractRequest() {
+
+        System.out.println("Enter VIN: ");
+        int vin = Integer.parseInt(scanner.nextLine());
+        Vehicle selectedVehicle = null;
+        for (Vehicle vehicle : dealership.getAllVehicles()) {
+            if (vehicle.getVin() == vin) {
+
+                selectedVehicle = vehicle;
+                break;
+            }
+        }
+        if (selectedVehicle == null) {
+
+            System.out.println("Vehicle not found.");
+            return;
+        }
+        String date =
+                String.valueOf(java.time.Year.now().getValue());
+        System.out.println("Enter Customer Name: ");
+        String customerName = scanner.nextLine();
+        System.out.println("Enter Customer Email: ");
+        String customerEmail = scanner.nextLine();
+        System.out.println("SALE or LEASE?");
+        String contractType = scanner.nextLine();
+        Contract contract;
+        if (contractType.equalsIgnoreCase("SALE")) {
+            System.out.println("Finance? YES/NO");
+            boolean finance =
+                    scanner.nextLine().equalsIgnoreCase("YES");
+            contract = new SalesContract(
+                    date,
+                    customerName,
+                    customerEmail,
+                    selectedVehicle,
+                    finance
+            );
+        } else {
+            int currentYear =
+                    java.time.Year.now().getValue();
+            if (currentYear - selectedVehicle.getYear() > 3) {
+                System.out.println("Vehicle too old to lease.");
+                return;
+            }
+            contract = new LeaseContract(
+                    date,
+                    customerName,
+                    customerEmail,
+                    selectedVehicle
+            );
+        }
+        ContractFileManager contractFileManager =
+                new ContractFileManager();
+
+        contractFileManager.saveContract(contract);
+
+        dealership.removeVehicle(selectedVehicle);
+
+        DealershipFileManager dealershipFileManager =
+                new DealershipFileManager();
+
+        dealershipFileManager.saveDealership(dealership);
+
+        System.out.println("Contract saved successfully!");
     }
 }

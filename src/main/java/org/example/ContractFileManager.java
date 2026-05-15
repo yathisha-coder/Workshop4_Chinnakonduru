@@ -28,7 +28,7 @@ public class ContractFileManager {
                         sale.getTotalPrice() + "|" +
                         sale.getFinance() + "|" +
                         sale.getMonthlyPayment());
-                writer.newLine();
+                writer.write("\n");
                 AsciiTable at = new AsciiTable();
                 at.addRule();
                 at.addRow("TYPE","CUSTOMER","VEHICLE","TOTAL","MONTHLY");
@@ -54,7 +54,7 @@ public class ContractFileManager {
                         lease.getLeaseFee() + "|" +
                         lease.getTotalPrice() + "|" +
                         lease.getMonthlyPayment());
-                writer.newLine();
+                writer.write("\n");
                 AsciiTable at = new AsciiTable();
                 at.addRule();
                 at.addRow("TYPE","CUSTOMER","VEHICLE","TOTAL","MONTHLY");
@@ -63,6 +63,7 @@ public class ContractFileManager {
                         vehicle.getModel(),lease.getTotalPrice(),lease.getMonthlyPayment());
                 at.addRule();
                 System.out.println(at.render());
+                writer.close();
             }
         }catch (IOException e){
             System.out.println("Something went wrong to saving contract. Try again!");
