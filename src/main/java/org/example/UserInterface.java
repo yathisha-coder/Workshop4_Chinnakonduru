@@ -52,6 +52,9 @@ public class UserInterface {
             case 10:
                 processContractRequest();
                 break;
+            case 11:
+               processAdminMode();
+                break;
             case 99:
                 System.out.println("\u001B[36mThank you! Come visit us again!\u001b[0m");
                 System.exit(0);
@@ -76,6 +79,7 @@ public class UserInterface {
         System.out.println("8.Add a vehicle");
         System.out.println("9.Remove a vehicle");
         System.out.println("10.Sell (or) Lease a vehicle");
+        System.out.println("11.Admin Mode");
         System.out.println("99.Quit");
         System.out.println("Enter you're option: ");
     }
@@ -254,5 +258,15 @@ public class UserInterface {
         dealershipFileManager.saveDealership(dealership);
 
         System.out.println("Contract saved successfully!");
+    }
+    public void processAdminMode(){
+        System.out.println("Enter Admin Password: ");
+        String password = scanner.nextLine();
+        if(password.equals("admin123")){
+            AdminUserInterface adminUI = new AdminUserInterface();
+            adminUI.display();
+        }else {
+            System.out.println("Wrong password.Try again!");
+        }
     }
 }

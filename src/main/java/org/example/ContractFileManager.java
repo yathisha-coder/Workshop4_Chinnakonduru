@@ -2,9 +2,9 @@ package org.example;
 
 import de.vandermeer.asciitable.AsciiTable;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContractFileManager {
     public void saveContract(Contract contract){
@@ -70,4 +70,27 @@ public class ContractFileManager {
 
         }
     }
+    public List<String> getAllContracts() {
+
+        List<String> contracts = new ArrayList<>();
+
+        try (BufferedReader reader =
+                     new BufferedReader(
+                             new FileReader("src/main/resources/contracts.csv"))) {
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    contracts.add(line);
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error reading contracts file");
+        }
+
+        return contracts;
+    }
+
 }
